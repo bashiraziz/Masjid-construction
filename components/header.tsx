@@ -6,27 +6,24 @@ import Image from "next/image"
 
 export function Header() {
   return (
-    <header className="flex h-16 items-center justify-between px-4 md:px-6 bg-white shadow-sm">
+    <header className="flex items-center justify-between h-16 px-4 md:px-6 border-b bg-white dark:bg-gray-950">
       <Link className="flex items-center gap-2" href="/">
-        <Image src="/placeholder-logo.svg" alt="Mosque Logo" width={32} height={32} />
-        <span className="text-lg font-semibold">Mosque Donation</span>
+        <Image src="/placeholder-logo.svg" alt="Mosque Logo" width={32} height={32} className="h-8 w-8" />
+        <span className="text-lg font-semibold">Mosque Donations</span>
       </Link>
       <nav className="hidden md:flex items-center gap-6">
-        <Link className="text-gray-600 hover:text-gray-900 transition-colors" href="/">
+        <Link className="font-medium hover:underline" href="/">
           Home
         </Link>
-        <Link className="text-gray-600 hover:text-gray-900 transition-colors" href="/projects">
+        <Link className="font-medium hover:underline" href="/projects">
           Projects
         </Link>
-        <Link className="text-gray-600 hover:text-gray-900 transition-colors" href="/donations">
-          Donations
+        <Link className="font-medium hover:underline" href="/donations">
+          Donate
         </Link>
-        <Link className="text-gray-600 hover:text-gray-900 transition-colors" href="/contact">
+        <Link className="font-medium hover:underline" href="/contact">
           Contact
         </Link>
-        <Button asChild className="bg-green-600 hover:bg-green-700 text-white">
-          <Link href="/donations">Donate Now</Link>
-        </Button>
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -37,21 +34,18 @@ export function Header() {
         </SheetTrigger>
         <SheetContent side="right">
           <div className="flex flex-col gap-4 p-4">
-            <Link className="text-gray-600 hover:text-gray-900 transition-colors" href="/">
+            <Link className="font-medium hover:underline" href="/">
               Home
             </Link>
-            <Link className="text-gray-600 hover:text-gray-900 transition-colors" href="/projects">
+            <Link className="font-medium hover:underline" href="/projects">
               Projects
             </Link>
-            <Link className="text-gray-600 hover:text-gray-900 transition-colors" href="/donations">
-              Donations
+            <Link className="font-medium hover:underline" href="/donations">
+              Donate
             </Link>
-            <Link className="text-gray-600 hover:text-gray-900 transition-colors" href="/contact">
+            <Link className="font-medium hover:underline" href="/contact">
               Contact
             </Link>
-            <Button asChild className="bg-green-600 hover:bg-green-700 text-white">
-              <Link href="/donations">Donate Now</Link>
-            </Button>
           </div>
         </SheetContent>
       </Sheet>

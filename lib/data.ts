@@ -1,100 +1,125 @@
-import { getDonations } from "@/app/donations/actions"
-
+// Define the Project interface
 export interface Project {
   id: number
   name: string
-  description: string
-  location: string
-  goal: number
-  raised: number // This will eventually come from the database
-  images?: string[] // Optional array of image URLs
   slug: string
+  description: string
+  goal: number
+  raised: number
+  category: string
+  location: string
+  startDate: string
+  endDate: string
+  status: string
+  impact: string
+  impactDetails: string
+  image?: string // Optional single image
+  images?: string[] // Optional array of images
 }
 
-// Exchange rate from USD to UGX (Ugandan Shillings)
-export const UGX_EXCHANGE_RATE = 3750 // Example rate: 1 USD = 3750 UGX
+// Exchange rate for UGX to USD (example rate)
+export const UGX_EXCHANGE_RATE = 3750 // 1 USD = 3750 UGX (example)
 
-// Dummy project data (will eventually be fetched from a database)
+// Placeholder project data
 export const projects: Project[] = [
   {
     id: 1,
-    name: "Grand Mosque of Kampala",
+    name: "New Mosque Construction",
+    slug: "new-mosque-construction",
     description:
-      "A monumental project to construct the largest mosque in Kampala, featuring traditional Islamic architecture and modern facilities for the community.",
-    location: "Kampala, Uganda",
-    goal: 500000,
-    raised: 150000, // Example raised amount
-    images: ["/placeholder.svg?height=400&width=600&text=Grand+Mosque+Kampala"],
-    slug: "grand-mosque-kampala",
+      "Help us build a new mosque to accommodate our growing community. This project includes the main prayer hall, ablution facilities, and a small library.",
+    goal: 500000000, // UGX
+    raised: 350000000, // UGX
+    category: "Construction",
+    location: "Central District",
+    startDate: "2023-01-15",
+    endDate: "2025-12-31",
+    status: "Ongoing",
+    impact: "provide a larger and more accessible place of worship",
+    impactDetails:
+      "creating a welcoming environment for prayer, education, and community gatherings. The new facility will include dedicated spaces for women and children, ensuring everyone has comfortable access to religious services and educational programs.",
+    images: ["/placeholder.svg?height=400&width=600", "/placeholder.svg?height=400&width=600"],
   },
   {
     id: 2,
-    name: "Community Mosque & School, Jinja",
+    name: "Orphanage Support Program",
+    slug: "orphanage-support-program",
     description:
-      "Building a new mosque combined with an Islamic school to provide education and spiritual guidance for children and adults in Jinja.",
-    location: "Jinja, Uganda",
-    goal: 250000,
-    raised: 80000, // Example raised amount
-    images: ["/placeholder.svg?height=400&width=600&text=Jinja+Community+Mosque"],
-    slug: "community-mosque-jinja",
+      "Provide essential support for orphans, including food, education, and healthcare. Your donation ensures a brighter future for vulnerable children.",
+    goal: 100000000, // UGX
+    raised: 80000000, // UGX
+    category: "Social Welfare",
+    location: "Rural Area",
+    startDate: "2024-03-01",
+    endDate: "2024-12-31",
+    status: "Ongoing",
+    impact: "improve the living conditions and future prospects of orphaned children",
+    impactDetails:
+      "providing nutritious meals, access to quality education, and necessary medical care. This support helps them grow into self-sufficient individuals and contributes positively to society.",
+    images: ["/placeholder.svg?height=400&width=600", "/placeholder.svg?height=400&width=600"],
   },
   {
     id: 3,
-    name: "Rural Prayer Center, Mbale",
+    name: "Water Well Project",
+    slug: "water-well-project",
     description:
-      "Establishing small prayer centers in underserved rural areas, starting with Mbale, to ensure access to prayer facilities for remote communities.",
-    location: "Mbale, Uganda",
-    goal: 100000,
-    raised: 45000, // Example raised amount
-    images: ["/placeholder.svg?height=400&width=600&text=Mbale+Prayer+Center"],
-    slug: "rural-prayer-center-mbale",
+      "Fund the drilling of new water wells in drought-affected areas, providing clean and safe drinking water to communities.",
+    goal: 75000000, // UGX
+    raised: 75000000, // UGX
+    category: "Infrastructure",
+    location: "Arid Region",
+    startDate: "2023-06-01",
+    endDate: "2024-02-28",
+    status: "Completed",
+    impact: "ensure access to clean and safe drinking water for underserved communities",
+    impactDetails:
+      "reducing waterborne diseases and improving overall public health. This project also frees up time for women and children who previously spent hours fetching water, allowing them to pursue education and other productive activities.",
+    images: ["/placeholder.svg?height=400&width=600", "/placeholder.svg?height=400&width=600"],
   },
   {
     id: 4,
-    name: "Masjid Al-Noor Renovation",
+    name: "Quran Memorization Program",
+    slug: "quran-memorization-program",
     description:
-      "A project focused on renovating and expanding the historic Masjid Al-Noor, preserving its heritage while upgrading facilities for increased capacity.",
-    location: "Entebbe, Uganda",
-    goal: 300000,
-    raised: 120000,
-    images: ["/placeholder.svg?height=400&width=600&text=Masjid+Al-Noor+Renovation"],
-    slug: "masjid-al-noor-renovation",
+      "Support students in memorizing the Holy Quran by providing resources, teachers, and a conducive learning environment.",
+    goal: 50000000, // UGX
+    raised: 40000000, // UGX
+    category: "Education",
+    location: "Mosque Learning Center",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    status: "Ongoing",
+    impact: "foster a deeper understanding and connection to the Quran among students",
+    impactDetails:
+      "providing structured learning, qualified teachers, and necessary materials. This program helps preserve Islamic knowledge and nurtures future leaders within the community.",
+    images: ["/placeholder.svg?height=400&width=600", "/placeholder.svg?height=400&width=600"],
   },
   {
     id: 5,
-    name: "Islamic Cultural Center, Gulu",
+    name: "Community Outreach & Dawah",
+    slug: "community-outreach-dawah",
     description:
-      "Developing a multi-purpose Islamic cultural center in Gulu, including a mosque, library, and community hall to foster Islamic knowledge and community engagement.",
-    location: "Gulu, Uganda",
-    goal: 400000,
-    raised: 200000,
-    images: ["/placeholder.svg?height=400&width=600&text=Gulu+Cultural+Center"],
-    slug: "islamic-cultural-center-gulu",
+      "Fund initiatives to spread the message of Islam and provide support to new reverts and those interested in learning more.",
+    goal: 30000000, // UGX
+    raised: 25000000, // UGX
+    category: "Outreach",
+    location: "Various Community Centers",
+    startDate: "2023-09-01",
+    endDate: "2024-08-31",
+    status: "Ongoing",
+    impact: "promote understanding of Islam and support community integration",
+    impactDetails:
+      "organizing educational workshops, interfaith dialogues, and providing resources for new Muslims. This fosters a more inclusive and informed society.",
+    images: ["/placeholder.svg?height=400&width=600", "/placeholder.svg?height=400&width=600"],
   },
 ]
 
-export function getProjectBySlug(slug: string): Project | undefined {
-  return projects.find((project) => project.slug === slug)
-}
-
-/**
- * Return the sum of all projectsʼ `raised` amounts (USD).
- */
+// Function to calculate total raised from the placeholder data
 export function getTotalRaised(): number {
   return projects.reduce((sum, project) => sum + project.raised, 0)
 }
 
+// Function to get total budget from the placeholder data
 export function getTotalBudget(): number {
   return projects.reduce((sum, project) => sum + project.goal, 0)
-}
-
-// This function now fetches donations and calculates totals dynamically
-export async function getTotalDonated(projectId?: number): Promise<number> {
-  const donations = await getDonations()
-  if (projectId) {
-    return donations
-      .filter((donation) => donation.project_id === projectId)
-      .reduce((sum, donation) => sum + donation.amount, 0)
-  }
-  return donations.reduce((sum, donation) => sum + donation.amount, 0)
 }

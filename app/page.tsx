@@ -1,166 +1,139 @@
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { projects, getTotalBudget, getTotalRaised } from "@/lib/data"
 import { formatCurrency } from "@/lib/utils"
+import { projects, getTotalRaised } from "@/lib/data" // Import getTotalRaised
 import Image from "next/image"
 
 interface ProjectCardProps {
   project: {
     id: number
     name: string
+    slug: string
     description: string
     goal: number
-    images?: string[] // Make images optional
-    slug: string
     raised: number
+    image?: string // Optional image property
+    images?: string[] // Optional array of images
   }
-}
-
-function StatsDashboard() {
-  const totalRaised = getTotalRaised()
-  const totalBudget = getTotalBudget()
-  const balanceRemaining = totalBudget - totalRaised
-
-  return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Overall Progress</CardTitle>
-        <CardDescription>Our collective goal for all projects.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-          <div>
-            <p className="text-sm font-medium text-gray-500">Total Raised</p>
-            <p className="text-2xl font-bold text-green-700">{formatCurrency(totalRaised)}</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Needed</p>
-            <p className="text-2xl font-bold text-gray-800">{formatCurrency(totalBudget)}</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Remaining</p>
-            <p className="text-2xl font-bold text-orange-600">{formatCurrency(balanceRemaining)}</p>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
 }
 
 function ProjectCard({ project }: ProjectCardProps) {
   const progress = (project.raised / project.goal) * 100
   const imageUrl =
-    project.images && project.images.length > 0 ? project.images[0] : "/placeholder.svg?height=200&width=300"
+    project.images && project.images.length > 0
+      ? project.images[0]
+      : project.image || "/placeholder.svg?height=200&width=300" // Fallback placeholder
 
   return (
     <Card className="flex flex-col h-full">
-      <CardHeader className="p-0">
-        <div className="relative w-full h-48">
-          <Image
-            src={imageUrl || "/placeholder.svg"}
-            alt={`Image for ${project.name}`}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-t-lg"
-          />
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1 p-4">
-        <CardTitle className="text-xl font-bold mb-2">{project.name}</CardTitle>
-        <CardDescription className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
-          {project.description}
-        </CardDescription>
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm font-medium">
-            <span>Raised: {formatCurrency(project.raised)}</span>
-            <span>Goal: {formatCurrency(project.goal)}</span>
+      <Link href={`/projects/${project.slug}`} className="block">
+        <CardHeader className="p-0">
+          <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
+            <Image
+              src={imageUrl || "/placeholder.svg"}
+              alt={`Image for ${project.name}`}
+              layout="fill"
+              objectFit="cover"
+              className="transition-transform duration-300 hover:scale-105"
+            />
           </div>
-          <Progress value={progress} className="w-full" />
-        </div>
-      </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <Link href={`/projects/${project.slug}`} className="w-full">
-          <Button className="w-full">View Details</Button>
-        </Link>
-      </CardFooter>
+        </CardHeader>
+        <CardContent className="p-4 flex-1 flex flex-col">
+          <CardTitle className="text-xl font-bold mb-2">{project.name}</CardTitle>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3 flex-1">{project.description}</p>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm font-medium">
+              <span>Raised: {formatCurrency(project.raised)}</span>
+              <span>Goal: {formatCurrency(project.goal)}</span>
+            </div>
+            <Progress value={progress} className="w-full" />
+            <p className="text-xs text-gray-500 dark:text-gray-400">{progress.toFixed(1)}% of goal</p>
+          </div>
+        </CardContent>
+      </Link>
     </Card>
   )
 }
 
 export default function HomePage() {
-  const totalBudget = getTotalBudget()
-  const totalDonated = getTotalRaised()
+  const totalRaised = getTotalRaised() // Use the local getTotalRaised from lib/data
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <section className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
-          Support Our Mosque Projects
-        </h1>
-        <figure className="mt-6 max-w-3xl mx-auto">
-          <blockquote className="text-lg italic text-gray-700">
-            <p>“Whoever builds a mosque for Allah, Allah will build for him a house in Paradise.”</p>
-          </blockquote>
-          <figcaption className="mt-2 text-sm text-gray-500">
-            — Prophet Muhammad ﷺ (Sahih al-Bukhari, Sahih Muslim)
-          </figcaption>
-        </figure>
-        <div className="mt-6 max-w-2xl mx-auto text-lg text-gray-600 space-y-4">
-          <p>
-            Building a mosque is a lasting deed for Allah. Your contribution creates a space for prayer, knowledge, and
-            community, paving a path to Paradise.
+    <main className="flex-1 p-4 md:p-6">
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-r from-green-600 to-teal-700 text-white">
+        <div className="container px-4 md:px-6 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-4">
+            Support Our Mosque Projects
+          </h1>
+          <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8">
+            Your generous contributions help us build and maintain essential facilities for our community.
           </p>
-          <p>It's a legacy, a Sadaqah Jariyah that will continue to benefit you in this life and the next.</p>
-        </div>
-        <div className="mt-8 flex justify-center space-x-4">
-          <Link href="/donations">
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white">
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link
+              className="inline-flex h-10 items-center justify-center rounded-md bg-white px-8 text-sm font-medium text-green-700 shadow transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950"
+              href="/donations"
+            >
               Donate Now
-            </Button>
-          </Link>
-          <Link href="/projects">
-            <Button size="lg" variant="outline">
+            </Link>
+            <Link
+              className="inline-flex h-10 items-center justify-center rounded-md border border-white bg-transparent px-8 text-sm font-medium text-white shadow-sm transition-colors hover:bg-white hover:text-green-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white"
+              href="/projects"
+            >
               View Projects
-            </Button>
-          </Link>
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">Our Impact</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="container px-4 md:px-6 py-12 md:py-24 lg:py-32">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-4">Our Impact</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Thanks to your support, we&apos;re making a difference.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <Card className="text-center p-6">
-            <CardTitle className="text-4xl font-bold text-green-600">{formatCurrency(totalDonated)}</CardTitle>
-            <CardDescription className="text-gray-600 dark:text-gray-400">Total Donations Received</CardDescription>
+            <CardHeader>
+              <CardTitle className="text-5xl font-bold text-green-600">{formatCurrency(totalRaised)}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-lg text-gray-700 dark:text-gray-300">Total Donations Raised</p>
+            </CardContent>
           </Card>
           <Card className="text-center p-6">
-            <CardTitle className="text-4xl font-bold text-blue-600">{formatCurrency(totalBudget)}</CardTitle>
-            <CardDescription className="text-gray-600 dark:text-gray-400">Total Project Goals</CardDescription>
+            <CardHeader>
+              <CardTitle className="text-5xl font-bold text-green-600">5+</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-lg text-gray-700 dark:text-gray-300">Projects Completed</p>
+            </CardContent>
           </Card>
           <Card className="text-center p-6">
-            <CardTitle className="text-4xl font-bold text-purple-600">{projects.length}</CardTitle>
-            <CardDescription className="text-gray-600 dark:text-gray-400">Active Projects</CardDescription>
+            <CardHeader>
+              <CardTitle className="text-5xl font-bold text-green-600">100%</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-lg text-gray-700 dark:text-gray-300">Transparency</p>
+            </CardContent>
           </Card>
         </div>
       </section>
 
-      <section>
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">Featured Projects</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.slice(0, 3).map((project) => (
+      <section className="container px-4 md:px-6 py-12 md:py-24 lg:py-32 bg-gray-50 dark:bg-gray-900">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-4">Current Projects</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Explore our ongoing initiatives and contribute to their success.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
-        <div className="text-center mt-8">
-          <Link href="/projects">
-            <Button variant="outline" size="lg">
-              View All Projects
-            </Button>
-          </Link>
-        </div>
       </section>
-    </div>
+    </main>
   )
 }

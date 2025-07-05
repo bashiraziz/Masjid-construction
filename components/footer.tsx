@@ -2,37 +2,26 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-8">
-      <div className="container mx-auto px-4 text-center">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-          <div className="mb-4 md:mb-0">
-            <h3 className="text-xl font-bold">Mosque Donation</h3>
-            <p className="text-sm text-gray-400">Building a better future, together.</p>
-          </div>
-          <nav className="space-x-4">
-            <Link className="hover:text-green-400 transition-colors" href="/">
-              Home
-            </Link>
-            <Link className="hover:text-green-400 transition-colors" href="/projects">
-              Projects
-            </Link>
-            <Link className="hover:text-green-400 transition-colors" href="/donations">
-              Donate
-            </Link>
-            <Link className="hover:text-green-400 transition-colors" href="/contact">
-              Contact
-            </Link>
-          </nav>
+    <footer className="bg-gray-900 text-white py-8 px-4 md:px-6">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="text-center md:text-left">
+          <p className="text-lg font-bold">Mosque Donation Website</p>
+          <p className="text-sm text-gray-400">© 2024 All rights reserved.</p>
         </div>
-        <div className="border-t border-gray-700 pt-6 text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Mosque Donation. All rights reserved.</p>
-          <p className="mt-2">
-            Powered by{" "}
-            <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="hover:text-green-400">
-              Vercel
-            </a>
-          </p>
-        </div>
+        <nav className="flex gap-6">
+          <Link className="text-sm hover:underline" href="/">
+            Home
+          </Link>
+          <Link className="text-sm hover:underline" href="/projects">
+            Projects
+          </Link>
+          <Link className="text-sm hover:underline" href="/donations">
+            Donate
+          </Link>
+          <Link className="text-sm hover:underline" href="/contact">
+            Contact
+          </Link>
+        </nav>
       </div>
     </footer>
   )

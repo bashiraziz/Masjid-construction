@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Mosque Donation Website",
-  description: "Support our mosque construction and community projects.",
+  description: "A platform for collecting donations for mosque projects.",
     generator: 'v0.dev'
 }
 
