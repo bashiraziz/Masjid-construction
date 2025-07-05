@@ -1,70 +1,69 @@
-import Image from "next/image"
 import Link from "next/link"
-import { projects } from "@/lib/data"
+import Image from "next/image"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { projects } from "@/lib/data"
 import { formatCurrency } from "@/lib/utils"
 
+// This is a simplified ProjectCard component for demonstration.
+// In a real app, you might move this to its own file (e.g., components/project-card.tsx)
 function ProjectCard({ project }: { project: (typeof projects)[0] }) {
-  const progress = (project.raised / project.budget) * 100
+  const progress = (project.raised / project.goal) * 100
+  const imageUrl =
+    project.images && project.images.length > 0 ? project.images[0] : "/placeholder.svg?height=400&width=600"
+
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-lg flex flex-col">
-      <Image
-        src={project.images[0] || "/placeholder.svg"}
-        alt={project.name}
-        width={600}
-        height={400}
-        className="w-full h-56 object-cover"
-      />
-      <div className="flex flex-col flex-grow">
-        <CardHeader>
-          <CardTitle>{project.name}</CardTitle>
-          <CardDescription>{project.location}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col flex-grow">
-          <p className="text-sm text-gray-600 mb-4 flex-grow">{project.description}</p>
-          <Progress value={progress} className="mb-2" />
-          <div className="flex justify-between text-sm mb-4">
-            <span className="font-semibold text-green-700">{formatCurrency(project.raised)}</span>
-            <span className="text-gray-500">of {formatCurrency(project.budget)}</span>
+    <Card className="flex flex-col overflow-hidden rounded-lg shadow-lg transition-all hover:shadow-xl">
+      <Link href={`/projects/${project.slug}`} className="block">
+        <Image
+          alt={`Image for ${project.name}`}
+          className="h-48 w-full object-cover"
+          height={300}
+          src={imageUrl || "/placeholder.svg"}
+          style={{
+            aspectRatio: "400/300",
+            objectFit: "cover",
+          }}
+          width={400}
+        />
+      </Link>
+      <CardHeader className="flex-grow">
+        <CardTitle className="text-xl font-bold">{project.name}</CardTitle>
+        <p className="text-sm text-gray-500">{project.location}</p>
+        <p className="text-gray-600 mt-2 line-clamp-3">{project.description}</p>
+      </CardHeader>
+      <CardContent className="p-4 pt-0">
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="font-medium text-gray-600">Raised:</span>
+            <span className="font-bold text-green-700">{formatCurrency(project.raised)}</span>
           </div>
-          <Button asChild className="w-full mt-auto bg-green-600 hover:bg-green-700 text-white">
-            <Link href={`/projects/${project.slug}`}>Learn More & Donate</Link>
-          </Button>
-        </CardContent>
-      </div>
+          <div className="flex justify-between text-sm">
+            <span className="font-medium text-gray-600">Goal:</span>
+            <span className="font-bold text-gray-800">{formatCurrency(project.goal)}</span>
+          </div>
+          <Progress value={progress} className="w-full" />
+        </div>
+        <Button asChild className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white">
+          <Link href={`/projects/${project.slug}`}>Learn More & Donate</Link>
+        </Button>
+      </CardContent>
     </Card>
   )
 }
 
 export default function ProjectsPage() {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900">Our Projects</h1>
-        <p className="mt-2 text-lg text-gray-600">
-          Each project is a chance to earn immense reward. See where you can help.
-        </p>
+    <main className="flex-1 p-4 md:p-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8 text-center">Our Mosque Projects</h1>
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-        {/* You can add a card for future projects here */}
-        <Card className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed">
-          <CardHeader>
-            <CardTitle>More Projects Coming Soon</CardTitle>
-            <CardDescription>
-              We are actively identifying new communities in need. Your general donations help us start new projects
-              faster.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="bg-gray-600 hover:bg-gray-700 text-white">General Donation</Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    </main>
   )
 }

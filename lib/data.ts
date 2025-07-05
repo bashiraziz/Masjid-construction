@@ -1,106 +1,157 @@
-// MARKER_PROJECTS_START
-export const projects = [
+export interface Project {
+  id: number
+  name: string
+  slug: string
+  description: string
+  raised: number
+  goal: number
+  images: string[] // Ensure this is an array of strings
+  videos: string[]
+  budgetPhases: BudgetPhase[]
+  accounting: AccountingEntry[]
+}
+
+export interface BudgetPhase {
+  name: string
+  usdAmount: number
+  description?: string
+}
+
+export interface AccountingEntry {
+  id: number
+  date: string
+  description: string
+  amount: number
+  type: "sent" | "spent"
+  receiptUrl?: string
+}
+
+export interface Donation {
+  id: number
+  donorName: string
+  amount: number
+  date: string
+  projectId?: number // Optional, as some donations might be general
+}
+
+// --- START_PROJECTS_DATA ---
+export const projects: Project[] = [
   {
     id: 1,
-    name: "Ageri Mosque",
+    name: "Ageri Mosque Construction",
     slug: "ageri-mosque",
-    location: "Ageri, Uganda",
     description:
-      "The Ageri Mosque project aims to construct a new mosque in the Ageri community, providing a much-needed place of worship and community gathering for the local Muslim population. The current structure is dilapidated and insufficient for the growing community.",
-    goal: 60000, // USD
-    raised: 25000, // USD
-    image: "/placeholder.svg?height=400&width=600",
+      "The Ageri Mosque project aims to build a new, larger mosque to serve the growing Muslim community in Ageri, Uganda. The current facility is insufficient for the community's needs, and a new mosque will provide ample space for daily prayers, Friday sermons, and community events. It will also include facilities for Islamic education and women's prayer.",
+    raised: 35000,
+    goal: 60000,
+    images: [
+      "/placeholder.svg?height=400&width=600",
+      "/placeholder.svg?height=400&width=600",
+      "/placeholder.svg?height=400&width=600",
+    ],
     videos: [
       "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder video
     ],
-    gallery: [
-      "/placeholder.svg?height=300&width=400",
-      "/placeholder.svg?height=300&width=400",
-      "/placeholder.svg?height=300&width=400",
-    ],
     budgetPhases: [
-      { phase: "Phase 1: Foundation", costUSD: 15000 },
-      { phase: "Phase 2: Walls & Roof", costUSD: 25000 },
-      { phase: "Phase 3: Finishing & Minaret", costUSD: 20000 },
+      {
+        name: "Phase 1: Land Acquisition & Foundation",
+        usdAmount: 15000,
+        description: "Purchase of land and laying the mosque's foundation.",
+      },
+      {
+        name: "Phase 2: Structure & Walls",
+        usdAmount: 25000,
+        description: "Construction of the main building structure and walls.",
+      },
+      {
+        name: "Phase 3: Roofing & Finishing",
+        usdAmount: 20000,
+        description: "Installation of the roof, windows, doors, and interior plastering.",
+      },
+      {
+        name: "Phase 4: Minbar & Mihrab",
+        usdAmount: 5000,
+        description: "Construction of the Minbar and Mihrab, and final interior touches.",
+      },
     ],
     accounting: [
       {
-        date: "2024-01-15",
-        description: "Cement purchase",
-        amountUSD: 1500,
-        receipt: "/placeholder.svg?height=100&width=100",
+        id: 1,
+        date: "2025-06-15",
+        description: "Land purchase payment",
+        amount: 10000,
+        type: "spent",
+        receiptUrl: "/placeholder.svg?height=200&width=300",
       },
       {
-        date: "2024-02-01",
-        description: "Labor wages (foundation)",
-        amountUSD: 2000,
-        receipt: "/placeholder.svg?height=100&width=100",
+        id: 2,
+        date: "2025-06-20",
+        description: "Cement delivery",
+        amount: 2500,
+        type: "spent",
+        receiptUrl: "/placeholder.svg?height=200&width=300",
+      },
+      {
+        id: 3,
+        date: "2025-06-25",
+        description: "Initial labor costs",
+        amount: 1500,
+        type: "spent",
+        receiptUrl: "/placeholder.svg?height=200&width=300",
       },
     ],
   },
   {
     id: 2,
-    name: "Hidayah Mosque",
+    name: "Hidayah Mosque Renovation",
     slug: "hidayah-mosque",
-    location: "Hidayah, Uganda",
     description:
-      "The Hidayah Mosque project aims to build a new, larger mosque to accommodate the rapidly growing Muslim community in Hidayah. This will include a dedicated women's section and a small library.",
-    goal: 80000, // USD
-    raised: 35000, // USD
-    image: "/placeholder.svg?height=400&width=600",
+      "The Hidayah Mosque, a beloved community landmark, is in dire need of renovation. This project aims to restore its structural integrity, upgrade its prayer facilities, and enhance its capacity to serve the local community. Renovations will include roof repairs, new flooring, improved ventilation, and modern ablution facilities.",
+    raised: 15000,
+    goal: 25000,
+    images: [
+      "/placeholder.svg?height=400&width=600",
+      "/placeholder.svg?height=400&width=600",
+      "/placeholder.svg?height=400&width=600",
+    ],
     videos: [
       "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder video
     ],
-    gallery: [
-      "/placeholder.svg?height=300&width=400",
-      "/placeholder.svg?height=300&width=400",
-      "/placeholder.svg?height=300&width=400",
-    ],
     budgetPhases: [
-      { phase: "Phase 1: Land Acquisition & Site Prep", costUSD: 20000 },
-      { phase: "Phase 2: Structure & Roofing", costUSD: 30000 },
-      { phase: "Phase 3: Interior & Facilities", costUSD: 30000 },
+      { name: "Phase 1: Structural Repairs", usdAmount: 8000, description: "Repairing roof, walls, and foundation." },
+      { name: "Phase 2: Interior Upgrades", usdAmount: 10000, description: "New flooring, painting, and lighting." },
+      { name: "Phase 3: Ablution Facilities", usdAmount: 7000, description: "Modernizing Wudu and restroom areas." },
     ],
     accounting: [
       {
-        date: "2024-03-10",
-        description: "Land purchase",
-        amountUSD: 5000,
-        receipt: "/placeholder.svg?height=100&width=100",
+        id: 1,
+        date: "2025-05-01",
+        description: "Roof repair materials",
+        amount: 3000,
+        type: "spent",
+        receiptUrl: "/placeholder.svg?height=200&width=300",
       },
       {
-        date: "2024-04-05",
-        description: "Architect fees",
-        amountUSD: 1500,
-        receipt: "/placeholder.svg?height=100&width=100",
+        id: 2,
+        date: "2025-05-10",
+        description: "Plumbing work",
+        amount: 1500,
+        type: "spent",
+        receiptUrl: "/placeholder.svg?height=200&width=300",
       },
     ],
   },
 ]
+// --- END_PROJECTS_DATA ---
 
-export const EXCHANGE_RATE_USD_TO_UGX = 3500 // 1 USD = 3500 UGX
-
-export function getTotalGoal(): number {
-  return projects.reduce((sum, project) => sum + project.goal, 0)
-}
+export const UGX_EXCHANGE_RATE = 3500 // 1 USD = 3500 UGX
 
 /**
- * Alias kept for backward compatibility.
- * Returns the same value as getTotalGoal().
+ * Total USD raised across all projects.
  */
-export function getTotalBudget(): number {
-  return getTotalGoal()
-}
+export const getTotalRaised = () => projects.reduce((sum, p) => sum + p.raised, 0)
 
-export function getTotalRaised(): number {
-  return projects.reduce((sum, project) => sum + project.raised, 0)
-}
-
-export function getProjectBySlug(slug: string) {
-  return projects.find((project) => project.slug === slug)
-}
-// MARKER_PROJECTS_END
-
-// MARKER_DONATIONS_START
-// This section is now handled by the database.
-// MARKER_DONATIONS_END
+/**
+ * Total USD *goal* (budget) across all projects.
+ */
+export const getTotalBudget = () => projects.reduce((sum, p) => sum + p.goal, 0)

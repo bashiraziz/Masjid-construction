@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import Image from "next/image"
-import { projects, UGX_EXCHANGE_RATE } from "@/lib/data"
+import { projects, UGX_EXCHANGE_RATE } from "@/lib/data" // Ensure UGX_EXCHANGE_RATE is imported
 import { formatCurrency, formatCurrencyUGX } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -16,7 +16,6 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
     notFound()
   }
 
-  // Use project.goal instead of project.budget
   const progress = (project.raised / project.goal) * 100
   const totalBudgetUSD = project.budgetPhases?.reduce((sum, phase) => sum + phase.usdAmount, 0) || 0
 

@@ -4,6 +4,9 @@ import { formatCurrency } from "@/lib/utils"
 import { getDonations } from "./actions"
 import { AddDonationForm } from "./add-donation-form"
 import { projects } from "@/lib/data" // Import projects to get project names
+import Link from "next/link" // Import Link for project links
+
+export const dynamic = "force-dynamic" // Ensure this page is dynamically rendered
 
 export default async function DonationsPage() {
   const donations = await getDonations()
@@ -36,14 +39,25 @@ export default async function DonationsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {donations.map((donation) => (
-                    <TableRow key={donation.id}>
-                      <TableCell className="font-medium">{donation.donor_name}</TableCell>
-                      <TableCell>{formatCurrency(donation.amount)}</TableCell>
-                      <TableCell>{new Date(donation.donation_date).toLocaleDateString()}</TableCell>
-                      <TableCell>{projectMap.get(donation.project_id) || "N/A"}</TableCell>
-                    </TableRow>
-                  ))}
+                  {donations.map((donation) => {
+                    const project = projects.find((p) => p.id === donation.project_id)
+                    return (
+                      <TableRow key={donation.id}>
+                        <TableCell className="font-medium">{donation.donor_name}</TableCell>
+                        <TableCell>{formatCurrency(donation.amount)}</TableCell>
+                        <TableCell>{new Date(donation.donation_date).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          {project ? (
+                            <Link href={`/projects/${project.slug}`} className="text-blue-600 hover:underline">
+                              {project.name}
+                            </Link>
+                          ) : (
+                            "N/A"
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
               </Table>
             )}
