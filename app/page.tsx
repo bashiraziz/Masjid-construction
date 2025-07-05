@@ -38,7 +38,7 @@ function StatsDashboard() {
 }
 
 function ProjectCard({ project }: { project: (typeof projects)[0] }) {
-  const progress = (project.raised / project.budget) * 100
+  const progress = (project.raised / project.goal) * 100
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-lg">
       <Image
@@ -57,7 +57,7 @@ function ProjectCard({ project }: { project: (typeof projects)[0] }) {
         <Progress value={progress} className="mb-2" />
         <div className="flex justify-between text-sm">
           <span className="font-semibold text-green-700">{formatCurrency(project.raised)}</span>
-          <span className="text-gray-500">of {formatCurrency(project.budget)}</span>
+          <span className="text-gray-500">of {formatCurrency(project.goal)}</span>
         </div>
         <Button asChild className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white">
           <Link href={`/projects/${project.slug}`}>View Project</Link>
