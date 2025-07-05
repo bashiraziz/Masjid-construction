@@ -154,4 +154,4 @@ export const getTotalRaised = () => projects.reduce((sum, p) => sum + p.raised, 
 /**
  * Total USD *goal* (budget) across all projects.
  */
-export const getTotalBudget = () => projects.reduce((sum, p) => sum + p.goal, 0)
+export const getTotalBudget = () => projects.reduce((sum, p) => p.goal + sum, 0)

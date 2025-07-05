@@ -1,55 +1,55 @@
-"use client"
-
+import type React from "react"
 import Link from "next/link"
-import { Building, HandHeart, Home, Mail } from "lucide-react"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
-const navLinks = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/projects", label: "Projects", icon: Building },
-  { href: "/donations", label: "Donations", icon: HandHeart },
-  { href: "/contact", label: "Contact", icon: Mail },
-]
-
 export function Header() {
-  const pathname = usePathname()
-
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <HandHeart className="h-8 w-8 text-green-700" />
-            <span className="text-xl font-bold text-gray-800">MosqueFund</span>
-          </Link>
-          <nav className="hidden md:flex items-center space-x-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                  pathname === link.href ? "bg-green-100 text-green-800" : "text-gray-600 hover:bg-gray-100",
-                )}
-              >
-                <link.icon className="h-4 w-4" />
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex items-center">
-            <Button asChild className="bg-green-600 hover:bg-green-700 text-white">
-              <Link href="/projects">Donate Now</Link>
-            </Button>
-            <button className="md:hidden ml-4 p-2 rounded-md text-gray-600 hover:bg-gray-100">
-              <span className="sr-only">Open menu</span>
-              {/* Add mobile menu icon here */}
-            </button>
-          </div>
-        </div>
-      </div>
+    <header className="px-4 lg:px-6 h-14 flex items-center bg-white shadow-sm">
+      <Link href="/" className="flex items-center justify-center" prefetch={false}>
+        <MosqueIcon className="h-6 w-6 text-green-700" />
+        <span className="sr-only">Mosque Donations</span>
+      </Link>
+      <nav className="ml-auto flex gap-4 sm:gap-6">
+        <Link href="/" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+          Home
+        </Link>
+        <Link href="/projects" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+          Projects
+        </Link>
+        <Link href="/donations" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+          Donations
+        </Link>
+        <Link href="/contact" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+          Contact
+        </Link>
+        <Button className="bg-green-600 hover:bg-green-700 text-white">Donate</Button>
+      </nav>
     </header>
+  )
+}
+
+function MosqueIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 12.2V20a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-8.2" />
+      <path d="M12 12.2V20a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-8.2" />
+      <path d="M5 12.2v.8A2 2 0 0 0 7 15h.8" />
+      <path d="M17 12.2v.8A2 2 0 0 0 19 15h.8" />
+      <path d="M12 22v-4" />
+      <path d="M12 12.2V4l-2 2-2-2" />
+      <path d="M12 4l2 2 2-2" />
+      <path d="M12 4V2" />
+    </svg>
   )
 }
