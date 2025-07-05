@@ -85,13 +85,10 @@ export default function HomePage() {
           </figure>
           <div className="mt-6 max-w-2xl mx-auto text-lg text-gray-600 space-y-4">
             <p>
-              There are few deeds as lasting and beloved as building a mosque for the sake of Allah. Every brick you
-              help place becomes a means of prayer, knowledge, community. And a path to Paradise.
+              Building a mosque is a lasting deed for Allah. Your contribution creates a space for prayer, knowledge,
+              and community, paving a path to Paradise.
             </p>
-            <p>
-              Your contribution isn’t just a donation, it’s a legacy. A Sadaqah Jariyah that will continue to benefit
-              you in this life and the next.
-            </p>
+            <p>It's a legacy, a Sadaqah Jariyah that will continue to benefit you in this life and the next.</p>
           </div>
           <div className="mt-8">
             <Button asChild size="lg" className="bg-green-600 hover:bg-green-700 text-white">

@@ -29,7 +29,7 @@ export type Donation = {
   donorName: string
   amount: number
   date: string
-  projectId: number
+  projectId: number | null // projectId can be null for general donations
 }
 
 // -- PROJECTS_START --
@@ -84,14 +84,8 @@ export const projects: Project[] = [
 ]
 // -- PROJECTS_END --
 
-export const donations: Donation[] = [
-  { id: 1, donorName: "Anonymous", amount: 50, date: "2025-07-04", projectId: 1 },
-  { id: 2, donorName: "Fatima H.", amount: 200, date: "2025-07-03", projectId: 2 },
-  { id: 3, donorName: "Yusuf A.", amount: 100, date: "2025-07-03", projectId: 1 },
-  { id: 4, donorName: "Anonymous", amount: 1000, date: "2025-07-02", projectId: 2 },
-  { id: 5, donorName: "The Khan Family", amount: 500, date: "2025-07-01", projectId: 2 },
-  { id: 6, donorName: "Anonymous", amount: 20, date: "2025-06-30", projectId: 1 },
-]
+// The donations array is now fetched from the database via app/donations/actions.ts
+// export const donations: Donation[] = [...]
 
 export const getTotalRaised = () => projects.reduce((acc, p) => acc + p.raised, 0)
 export const getTotalBudget = () => projects.reduce((acc, p) => acc + p.budget, 0)
