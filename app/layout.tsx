@@ -5,13 +5,13 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster" // Ensure Toaster is imported
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Mosque Donation Website",
-  description: "Support our mosque projects and community initiatives.",
+  description: "Support our mosque construction and community projects.",
     generator: 'v0.dev'
 }
 
@@ -29,7 +29,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
-          <Toaster />
+          <Toaster /> {/* Toaster component for displaying toasts */}
         </ThemeProvider>
       </body>
     </html>

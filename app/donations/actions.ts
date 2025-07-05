@@ -5,45 +5,64 @@ import { revalidatePath } from "next/cache"
 
 export interface Donation {
   id: number
-  donor_name: string
   amount: number
-  donation_date: string
-  project_id?: number | null // Make project_id nullable
+  donor_name: string
+  project_id?: number // Optional, as some donations might be general
+  created_at: string
 }
 
 export async function getDonations(): Promise<Donation[]> {
+  // If the connection string isn’t available (e.g. during a local preview or
+  // when the env var hasn’t been set in Vercel yet) bail out gracefully.
+  if (!process.env.POSTGRES_URL) {
+    console.warn("POSTGRES_URL env var is missing – returning an empty donations array.")
+    return []
+  }
+
   console.log("Attempting to connect to Vercel Postgres and fetch donations...")
   try {
-    const { rows } = await sql<Donation>`SELECT * FROM donations ORDER BY donation_date DESC, id DESC`
-    console.log(`Successfully fetched ${rows.length} donations from the database.`)
+    const { rows } = await sql<Donation>`SELECT * FROM donations ORDER BY created_at DESC`
+    console.log("Successfully fetched donations:", rows.length, "records.")
     return rows
   } catch (error) {
     console.error("Failed to fetch donations:", error)
-    // In a production app, you might want to log this error to a monitoring service
-    // and return an empty array or throw a more specific error.
     return []
   }
 }
 
-// Changed to default export
-export default async function addDonation(prevState: any, formData: FormData) {
-  const donorName = formData.get("donorName") as string
+export async function addDonation(formData: FormData) {
   const amount = Number.parseFloat(formData.get("amount") as string)
-  const projectId = formData.get("projectId") ? Number.parseInt(formData.get("projectId") as string) : null // Handle optional project ID
+  const donor_name = formData.get("donor_name") as string
+  const projectId = formData.get("projectId") as string | undefined // Get projectId from form
 
-  if (!donorName || isNaN(amount) || amount <= 0) {
-    return { message: "Invalid input: Donor name and a positive amount are required." }
+  if (isNaN(amount) || amount <= 0) {
+    return { success: false, message: "Invalid amount provided." }
+  }
+  if (!donor_name || donor_name.trim() === "") {
+    return { success: false, message: "Donor name cannot be empty." }
   }
 
   try {
-    await sql`
-      INSERT INTO donations (donor_name, amount, donation_date, project_id)
-      VALUES (${donorName}, ${amount}, CURRENT_DATE, ${projectId})
-    `
-    revalidatePath("/donations") // Revalidate the donations page to show the new entry
-    return { message: "Donation added successfully!" }
+    if (projectId) {
+      // If projectId is provided, link the donation to a specific project
+      await sql`
+        INSERT INTO donations (amount, donor_name, project_id)
+        VALUES (${amount}, ${donor_name}, ${Number.parseInt(projectId)});
+      `
+    } else {
+      // Otherwise, it's a general donation
+      await sql`
+        INSERT INTO donations (amount, donor_name)
+        VALUES (${amount}, ${donor_name});
+      `
+    }
+
+    revalidatePath("/donations") // Revalidate the donations page
+    revalidatePath("/projects") // Revalidate projects page to update totals
+    revalidatePath("/") // Revalidate homepage to update overall progress
+    return { success: true, message: "Donation added successfully!" }
   } catch (error) {
     console.error("Failed to add donation:", error)
-    return { message: "Failed to add donation. Please try again." }
+    return { success: false, message: "Failed to add donation." }
   }
 }

@@ -33,9 +33,6 @@ function ProjectCard({ project }: ProjectCardProps) {
             layout="fill"
             objectFit="cover"
             className="rounded-t-lg"
-            onError={(e) => {
-              e.currentTarget.src = "/placeholder.svg?height=200&width=300"
-            }}
           />
         </div>
       </CardHeader>
