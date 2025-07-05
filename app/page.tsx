@@ -37,12 +37,18 @@ function StatsDashboard() {
   )
 }
 
-function ProjectCard({ project }: { project: (typeof projects)[0] }) {
+function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+  // Prefer the first item in `images`; otherwise use `image`; otherwise placeholder
+  const imgSrc =
+    (Array.isArray(project.images) && project.images.length > 0 && project.images[0]) ||
+    project.image ||
+    "/placeholder.svg"
+
   const progress = (project.raised / project.goal) * 100
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-lg">
       <Image
-        src={project.images[0] || "/placeholder.svg"}
+        src={imgSrc || "/placeholder.svg"}
         alt={project.name}
         width={600}
         height={400}

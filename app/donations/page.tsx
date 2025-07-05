@@ -1,25 +1,31 @@
-import { getDonations } from "./actions"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { formatCurrencyUSD } from "@/lib/utils"
-import Link from "next/link"
-import { projects } from "@/lib/data" // Still needed to link project names
+import { formatCurrency } from "@/lib/utils"
+import { getDonations } from "./actions"
+import { AddDonationForm } from "./add-donation-form"
+import { projects } from "@/lib/data" // Import projects to get project names
 
 export default async function DonationsPage() {
   const donations = await getDonations()
 
+  // Create a map for quick project name lookup
+  const projectMap = new Map(projects.map((p) => [p.id, p.name]))
+
   return (
-    <div className="container mx-auto py-8 px-4 md:px-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Recent Donations</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>All Donations</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {donations.length === 0 ? (
-            <p className="text-center text-gray-500">No donations received yet.</p>
-          ) : (
-            <div className="overflow-x-auto">
+    <main className="flex-1 p-4 md:p-6">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-center">Donations Received</h1>
+
+        <AddDonationForm />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Donations</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {donations.length === 0 ? (
+              <p className="text-center text-gray-500">No donations received yet.</p>
+            ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -30,31 +36,20 @@ export default async function DonationsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {donations.map((donation) => {
-                    const project = projects.find((p) => p.id === donation.projectId)
-                    return (
-                      <TableRow key={donation.id}>
-                        <TableCell className="font-medium">{donation.donorName}</TableCell>
-                        <TableCell>{formatCurrencyUSD(donation.amount)}</TableCell>
-                        <TableCell>{donation.date}</TableCell>
-                        <TableCell>
-                          {project ? (
-                            <Link href={`/projects/${project.slug}`} className="text-blue-600 hover:underline">
-                              {project.name}
-                            </Link>
-                          ) : (
-                            "N/A"
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
+                  {donations.map((donation) => (
+                    <TableRow key={donation.id}>
+                      <TableCell className="font-medium">{donation.donor_name}</TableCell>
+                      <TableCell>{formatCurrency(donation.amount)}</TableCell>
+                      <TableCell>{new Date(donation.donation_date).toLocaleDateString()}</TableCell>
+                      <TableCell>{projectMap.get(donation.project_id) || "N/A"}</TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   )
 }
