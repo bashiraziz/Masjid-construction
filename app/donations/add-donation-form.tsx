@@ -1,7 +1,7 @@
 "use client"
 
 import { useActionState, useRef } from "react"
-import { addDonation } from "./actions"
+import addDonation from "./actions" // Updated import: no curly braces
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"

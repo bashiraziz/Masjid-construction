@@ -1,57 +1,75 @@
 import Link from "next/link"
-import Image from "next/image"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { projects } from "@/lib/data"
+import { projects, getTotalDonated } from "@/lib/data"
 import { formatCurrency } from "@/lib/utils"
+import Image from "next/image"
 
-function ProjectCard({ project }: { project: (typeof projects)[0] }) {
-  const progress = (project.raised / project.goal) * 100
+interface ProjectCardProps {
+  project: {
+    id: number
+    name: string
+    description: string
+    goal: number
+    images?: string[] // Make images optional
+    slug: string
+  }
+}
+
+function ProjectCard({ project }: ProjectCardProps) {
+  const totalDonated = getTotalDonated(project.id)
+  const progress = (totalDonated / project.goal) * 100
   const imageUrl =
-    project.images && project.images.length > 0 ? project.images[0] : "/placeholder.svg?height=400&width=600"
+    project.images && project.images.length > 0 ? project.images[0] : "/placeholder.svg?height=200&width=300"
 
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-lg flex flex-col">
-      <Image
-        src={imageUrl || "/placeholder.svg"}
-        alt={project.name}
-        width={600}
-        height={400}
-        className="w-full h-56 object-cover"
-      />
-      <div className="flex flex-col flex-grow">
-        <CardHeader>
-          <CardTitle>{project.name}</CardTitle>
-          <CardDescription>{project.location}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col flex-grow">
-          <p className="text-sm text-gray-600 mb-4 flex-grow">{project.description}</p>
-          <Progress value={progress} className="mb-2" />
-          <div className="flex justify-between text-sm mb-4">
-            <span className="font-semibold text-green-700">{formatCurrency(project.raised)}</span>
-            <span className="text-gray-500">of {formatCurrency(project.goal)}</span>
+    <Card className="flex flex-col h-full">
+      <CardHeader className="p-0">
+        <div className="relative w-full h-48">
+          <Image
+            src={imageUrl || "/placeholder.svg"}
+            alt={`Image for ${project.name}`}
+            layout="fill"
+            objectFit="cover"
+            className="rounded-t-lg"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.svg?height=200&width=300"
+            }}
+          />
+        </div>
+      </CardHeader>
+      <CardContent className="flex-1 p-4">
+        <CardTitle className="text-xl font-bold mb-2">{project.name}</CardTitle>
+        <CardDescription className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
+          {project.description}
+        </CardDescription>
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm font-medium">
+            <span>Raised: {formatCurrency(totalDonated)}</span>
+            <span>Goal: {formatCurrency(project.goal)}</span>
           </div>
-          <Button asChild className="w-full mt-auto bg-green-600 hover:bg-green-700 text-white">
-            <Link href={`/projects/${project.slug}`}>Learn More & Donate</Link>
-          </Button>
-        </CardContent>
-      </div>
+          <Progress value={progress} className="w-full" />
+        </div>
+      </CardContent>
+      <CardFooter className="p-4 pt-0">
+        <Link href={`/projects/${project.slug}`} className="w-full">
+          <Button className="w-full">View Details</Button>
+        </Link>
+      </CardFooter>
     </Card>
   )
 }
 
 export default function ProjectsPage() {
   return (
-    <main className="flex-1 p-4 md:p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">Our Mosque Projects</h1>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-extrabold text-center mb-8">Our Projects</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
       </div>
-    </main>
+    </div>
   )
 }

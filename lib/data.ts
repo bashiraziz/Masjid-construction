@@ -1,157 +1,108 @@
+import type { Donation } from "@/app/donations/actions"
+
 export interface Project {
   id: number
   name: string
-  slug: string
   description: string
-  raised: number
+  longDescription?: string
   goal: number
-  images: string[] // Ensure this is an array of strings
-  videos: string[]
-  budgetPhases: BudgetPhase[]
-  accounting: AccountingEntry[]
+  category: string
+  location: string
+  images?: string[]
+  slug: string
 }
 
-export interface BudgetPhase {
-  name: string
-  usdAmount: number
-  description?: string
-}
-
-export interface AccountingEntry {
-  id: number
-  date: string
-  description: string
-  amount: number
-  type: "sent" | "spent"
-  receiptUrl?: string
-}
-
-export interface Donation {
-  id: number
-  donorName: string
-  amount: number
-  date: string
-  projectId?: number // Optional, as some donations might be general
-}
-
-// --- START_PROJECTS_DATA ---
+// In-memory data for projects (replace with database fetching later)
 export const projects: Project[] = [
   {
     id: 1,
-    name: "Ageri Mosque Construction",
-    slug: "ageri-mosque",
-    description:
-      "The Ageri Mosque project aims to build a new, larger mosque to serve the growing Muslim community in Ageri, Uganda. The current facility is insufficient for the community's needs, and a new mosque will provide ample space for daily prayers, Friday sermons, and community events. It will also include facilities for Islamic education and women's prayer.",
-    raised: 35000,
-    goal: 60000,
-    images: [
-      "/placeholder.svg?height=400&width=600",
-      "/placeholder.svg?height=400&width=600",
-      "/placeholder.svg?height=400&width=600",
-    ],
-    videos: [
-      "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder video
-    ],
-    budgetPhases: [
-      {
-        name: "Phase 1: Land Acquisition & Foundation",
-        usdAmount: 15000,
-        description: "Purchase of land and laying the mosque's foundation.",
-      },
-      {
-        name: "Phase 2: Structure & Walls",
-        usdAmount: 25000,
-        description: "Construction of the main building structure and walls.",
-      },
-      {
-        name: "Phase 3: Roofing & Finishing",
-        usdAmount: 20000,
-        description: "Installation of the roof, windows, doors, and interior plastering.",
-      },
-      {
-        name: "Phase 4: Minbar & Mihrab",
-        usdAmount: 5000,
-        description: "Construction of the Minbar and Mihrab, and final interior touches.",
-      },
-    ],
-    accounting: [
-      {
-        id: 1,
-        date: "2025-06-15",
-        description: "Land purchase payment",
-        amount: 10000,
-        type: "spent",
-        receiptUrl: "/placeholder.svg?height=200&width=300",
-      },
-      {
-        id: 2,
-        date: "2025-06-20",
-        description: "Cement delivery",
-        amount: 2500,
-        type: "spent",
-        receiptUrl: "/placeholder.svg?height=200&width=300",
-      },
-      {
-        id: 3,
-        date: "2025-06-25",
-        description: "Initial labor costs",
-        amount: 1500,
-        type: "spent",
-        receiptUrl: "/placeholder.svg?height=200&width=300",
-      },
-    ],
+    name: "New Mosque Construction",
+    description: "Building a new, larger mosque to accommodate our growing community.",
+    longDescription:
+      "This ambitious project aims to construct a state-of-the-art mosque facility that will serve as a spiritual hub for our expanding community. The new building will feature a larger prayer hall, dedicated spaces for women and children, a community center, and enhanced educational facilities. Your support will help us create a welcoming and functional space for generations to come.",
+    goal: 500000,
+    category: "Construction",
+    location: "Downtown City",
+    images: ["/placeholder.svg?height=400&width=600"],
+    slug: "new-mosque-construction",
   },
   {
     id: 2,
-    name: "Hidayah Mosque Renovation",
-    slug: "hidayah-mosque",
-    description:
-      "The Hidayah Mosque, a beloved community landmark, is in dire need of renovation. This project aims to restore its structural integrity, upgrade its prayer facilities, and enhance its capacity to serve the local community. Renovations will include roof repairs, new flooring, improved ventilation, and modern ablution facilities.",
-    raised: 15000,
-    goal: 25000,
-    images: [
-      "/placeholder.svg?height=400&width=600",
-      "/placeholder.svg?height=400&width=600",
-      "/placeholder.svg?height=400&width=600",
-    ],
-    videos: [
-      "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder video
-    ],
-    budgetPhases: [
-      { name: "Phase 1: Structural Repairs", usdAmount: 8000, description: "Repairing roof, walls, and foundation." },
-      { name: "Phase 2: Interior Upgrades", usdAmount: 10000, description: "New flooring, painting, and lighting." },
-      { name: "Phase 3: Ablution Facilities", usdAmount: 7000, description: "Modernizing Wudu and restroom areas." },
-    ],
-    accounting: [
-      {
-        id: 1,
-        date: "2025-05-01",
-        description: "Roof repair materials",
-        amount: 3000,
-        type: "spent",
-        receiptUrl: "/placeholder.svg?height=200&width=300",
-      },
-      {
-        id: 2,
-        date: "2025-05-10",
-        description: "Plumbing work",
-        amount: 1500,
-        type: "spent",
-        receiptUrl: "/placeholder.svg?height=200&width=300",
-      },
-    ],
+    name: "Orphanage Support Program",
+    description: "Providing food, shelter, education, and care for orphaned children.",
+    longDescription:
+      "Our orphanage support program is dedicated to providing a safe, nurturing, and stimulating environment for orphaned children. We ensure they receive nutritious meals, comfortable shelter, quality education, and essential healthcare. Beyond basic needs, we focus on their holistic development, offering emotional support and opportunities for personal growth. Your donation directly impacts the lives of these vulnerable children, giving them a chance for a brighter future.",
+    goal: 150000,
+    category: "Community",
+    location: "Rural Village",
+    images: ["/placeholder.svg?height=400&width=600"],
+    slug: "orphanage-support-program",
+  },
+  {
+    id: 3,
+    name: "Water Well Project",
+    description: "Drilling new water wells in drought-affected areas to provide clean water.",
+    longDescription:
+      "Access to clean and safe drinking water is a fundamental human right. Our water well project focuses on drilling new wells in remote, drought-stricken regions where communities lack reliable water sources. This initiative not only provides clean water for drinking and sanitation but also improves health, reduces water-borne diseases, and frees up time for education and economic activities, especially for women and children who often bear the burden of water collection.",
+    goal: 75000,
+    category: "Humanitarian",
+    location: "Arid Region",
+    images: ["/placeholder.svg?height=400&width=600"],
+    slug: "water-well-project",
+  },
+  {
+    id: 4,
+    name: "Quran Memorization Classes",
+    description: "Funding teachers and resources for children and adults to memorize the Quran.",
+    longDescription:
+      "Our Quran Memorization Classes aim to facilitate the memorization of the Holy Quran for students of all ages. We provide qualified teachers, essential learning materials, and a conducive environment for spiritual growth. This program helps individuals deepen their understanding of Islam, strengthen their faith, and preserve the divine word. Your contribution supports the continuity of this noble endeavor.",
+    goal: 30000,
+    category: "Education",
+    location: "Mosque Learning Center",
+    images: ["/placeholder.svg?height=400&width=600"],
+    slug: "quran-memorization-classes",
+  },
+  {
+    id: 5,
+    name: "Food Aid for Needy Families",
+    description: "Distributing food packages to families struggling with food insecurity.",
+    longDescription:
+      "The Food Aid for Needy Families program provides essential food packages to vulnerable families facing food insecurity. Our distributions ensure that families have access to nutritious staples, helping to alleviate hunger and improve overall well-being. This initiative is particularly crucial during times of economic hardship or natural disasters, offering a lifeline to those most in need.",
+    goal: 100000,
+    category: "Humanitarian",
+    location: "Local Community",
+    images: ["/placeholder.svg?height=400&width=600"],
+    slug: "food-aid-for-needy-families",
   },
 ]
-// --- END_PROJECTS_DATA ---
 
-export const UGX_EXCHANGE_RATE = 3500 // 1 USD = 3500 UGX
+// In-memory data for donations (replace with database fetching later)
+// This is a placeholder and will be replaced by actual database data
+const inMemoryDonations: Donation[] = [
+  { id: 1, donor_name: "Anonymous", amount: 100, donation_date: "2023-01-15", project_id: 1 },
+  { id: 2, donor_name: "Jane Doe", amount: 250, donation_date: "2023-01-16", project_id: 1 },
+  { id: 3, donor_name: "John Smith", amount: 50, donation_date: "2023-01-17", project_id: 2 },
+  { id: 4, donor_name: "Anonymous", amount: 75, donation_date: "2023-01-18", project_id: null }, // General donation
+  { id: 5, donor_name: "Community Member", amount: 150, donation_date: "2023-01-19", project_id: 3 },
+]
 
-/**
- * Total USD raised across all projects.
- */
-export const getTotalRaised = () => projects.reduce((sum, p) => sum + p.raised, 0)
+export function getProjectBySlug(slug: string): Project | undefined {
+  return projects.find((project) => project.slug === slug)
+}
 
-/**
- * Total USD *goal* (budget) across all projects.
- */
-export const getTotalBudget = () => projects.reduce((sum, p) => p.goal + sum, 0)
+export function getTotalBudget(): number {
+  return projects.reduce((sum, project) => sum + project.goal, 0)
+}
+
+export function getTotalDonated(projectId?: number): number {
+  // In a real application, this would fetch from the database
+  // For now, we'll use the in-memory data
+  let filteredDonations = inMemoryDonations
+  if (projectId) {
+    filteredDonations = inMemoryDonations.filter((donation) => donation.project_id === projectId)
+  }
+  return filteredDonations.reduce((sum, donation) => sum + donation.amount, 0)
+}
+
+// Example exchange rate for Ugandan Shillings (UGX)
+export const UGX_EXCHANGE_RATE = 3750 // 1 USD = 3750 UGX (example rate)

@@ -5,29 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number, currencyCode = "USD"): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0, // No cents for whole dollar amounts
-    maximumFractionDigits: 0,
-  }).format(amount)
-}
-
-export function formatCurrencyUGX(amount: number): string {
-  return new Intl.NumberFormat("en-UG", {
-    style: "currency",
-    currency: "UGX",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount)
-}
-
-export function formatCurrencyUSD(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    currency: currencyCode,
+    minimumFractionDigits: 0, // Ensure no decimal places for whole numbers
+    maximumFractionDigits: 2, // Allow up to 2 decimal places for cents
   }).format(amount)
 }

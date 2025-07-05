@@ -1,3 +1,5 @@
+"use server"
+
 import { sql } from "@vercel/postgres"
 import { revalidatePath } from "next/cache"
 
@@ -23,7 +25,8 @@ export async function getDonations(): Promise<Donation[]> {
   }
 }
 
-export async function addDonation(prevState: any, formData: FormData) {
+// Changed to default export
+export default async function addDonation(prevState: any, formData: FormData) {
   const donorName = formData.get("donorName") as string
   const amount = Number.parseFloat(formData.get("amount") as string)
   const projectId = formData.get("projectId") ? Number.parseInt(formData.get("projectId") as string) : null // Handle optional project ID
