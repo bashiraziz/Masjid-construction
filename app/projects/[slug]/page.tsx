@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import Image from "next/image"
-import { projects, USD_TO_UGX_RATE } from "@/lib/data"
+import { projects, UGX_EXCHANGE_RATE } from "@/lib/data"
 import { formatCurrency, formatCurrencyUGX } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -16,8 +16,9 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
     notFound()
   }
 
-  const progress = (project.raised / project.budget) * 100
-  const totalBudgetUSD = project.budgetPhases?.reduce((sum, phase) => sum + phase.amountUSD, 0) || 0
+  // Use project.goal instead of project.budget
+  const progress = (project.raised / project.goal) * 100
+  const totalBudgetUSD = project.budgetPhases?.reduce((sum, phase) => sum + phase.usdAmount, 0) || 0
 
   return (
     <div className="bg-white">
@@ -41,7 +42,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                     <CardTitle>About This Project</CardTitle>
                   </CardHeader>
                   <CardContent className="prose max-w-none text-gray-700">
-                    <p>{project.longDescription}</p>
+                    <p>{project.description}</p>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -90,7 +91,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                   <CardHeader>
                     <CardTitle>Budget Breakdown</CardTitle>
                     <CardDescription>
-                      Exchange Rate: 1 USD = {USD_TO_UGX_RATE.toLocaleString()} UGX (approx.)
+                      Exchange Rate: 1 USD = {UGX_EXCHANGE_RATE.toLocaleString()} UGX (approx.)
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -105,10 +106,10 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                       <TableBody>
                         {project.budgetPhases?.map((phase, index) => (
                           <TableRow key={index}>
-                            <TableCell className="font-medium">{phase.phaseName}</TableCell>
-                            <TableCell className="text-right font-mono">{formatCurrency(phase.amountUSD)}</TableCell>
+                            <TableCell className="font-medium">{phase.name}</TableCell>
+                            <TableCell className="text-right font-mono">{formatCurrency(phase.usdAmount)}</TableCell>
                             <TableCell className="text-right font-mono">
-                              {formatCurrencyUGX(phase.amountUSD * USD_TO_UGX_RATE)}
+                              {formatCurrencyUGX(phase.usdAmount * UGX_EXCHANGE_RATE)}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -120,7 +121,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                             {formatCurrency(totalBudgetUSD)}
                           </TableHead>
                           <TableHead className="text-right font-bold font-mono">
-                            {formatCurrencyUGX(totalBudgetUSD * USD_TO_UGX_RATE)}
+                            {formatCurrencyUGX(totalBudgetUSD * UGX_EXCHANGE_RATE)}
                           </TableHead>
                         </TableRow>
                       </TableFooter>
@@ -185,11 +186,11 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium text-gray-600">Goal</span>
-                    <span className="font-bold text-gray-800">{formatCurrency(project.budget)}</span>
+                    <span className="font-bold text-gray-800">{formatCurrency(project.goal)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium text-gray-600">Remaining</span>
-                    <span className="font-bold text-orange-600">{formatCurrency(project.budget - project.raised)}</span>
+                    <span className="font-bold text-orange-600">{formatCurrency(project.goal - project.raised)}</span>
                   </div>
                 </div>
                 <Button size="lg" className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white">
